@@ -1,0 +1,100 @@
+from fastapi import FastAPI, APIRouter, Query
+from schemas.schemas import OrderCreate, OrderRead, OrderUpdate, ProductsRead, ClientOrder, OrderResponse
+from services.order_service import OrderService
+
+
+
+app = FastAPI()
+
+
+router_order = APIRouter(prefix="/order")
+
+
+@router_order.post("/create_orders", response_model=OrderRead)
+async def create_orders(order: OrderCreate):
+        return await OrderService.create_order(
+            data=order
+        )
+
+
+@router_order.get("/get_orders")
+async def get_orders(skip: int = Query(0, ge=1), limit: int = Query(0, ge=1, le=100)):
+        return await OrderService.get_orders(
+            skip,
+            limit
+        )
+
+
+@router_order.get("/orders/{order_id}", response_model=OrderRead)
+async def read_order(order_id: int):
+        return await OrderService.get_order(
+            order_id
+        )
+
+    
+@router_order.post("{order_id}/products/{products_id}", response_model=OrderRead)
+async def add_product_to_order(order_id: int, products_id: int):
+        return await OrderService.add_product_to_order(
+            order_id,
+            products_id
+        )
+
+
+@router_order.put("/order_update/{order_id}", response_model=OrderUpdate)
+async def order_update(order_id: int, title: str):
+    return await OrderService.order_update(
+        order_id,
+        title=title
+    ) 
+
+
+@router_order.get("/orders/{order_id}/products")
+async def order_with_products(order_id: int, products: ProductsRead):
+    order = await OrderService.get_orders(
+        order_id,
+        products
+    )
+    return {
+        "order_id": order.id
+        }
+
+
+@router_order.get("/order/{order_id}/total_price")
+async def order_client_sum(order_id: int):
+    return await OrderService.order_client_sum(
+        order_id
+    )
+
+
+@router_order.put("/client/{client_id}/order")
+async def update_order_status(order_id: int, status: str):
+     return await OrderService.update_order_status(
+        order_id,
+        status
+    )
+     
+
+@router_order.post("/orders", response_model=OrderResponse)
+async def create_order_for_client(data: ClientOrder):
+    order =  await OrderService.create_order_client(
+        client_id=data.client_id,
+        product_id=data.product_id,
+        title=data.title
+    )
+    return order
+
+
+
+
+
+
+@router_order.delete("/orders/{order_id}/product/{product_id}")
+async def delete_product_from_order(order_id: int, product_id: int):
+    order = await OrderService.delete_product_from_order(order_id, product_id)
+    return order
+
+
+@router_order.get("order_with_products/{order_id}")
+async def order_with_products(order_id: int):
+      order_with_products = await OrderService.get_order_with_products(order_id)
+      return order_with_products
