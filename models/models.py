@@ -2,22 +2,8 @@ from database.database import Base
 from typing import List
 from sqlalchemy import ForeignKey, Table, Column, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from enum import Enum as PyEnum
-from sqlalchemy import Enum as SAEnum
+from core.enum import SAEnum, TransactionType, OrderStatus
 
-
-class OrderStatus(PyEnum):
-    create = "create"
-    completed = "completed"
-    cancelled = "cancelled"
-
-
-
-class TransactionType(PyEnum):
-    deposit = "deposit"
-    withdraw = "withdraw"
-    refund = "refund"
-    purchase = "purchase"
 
 
 class Transaction(Base):

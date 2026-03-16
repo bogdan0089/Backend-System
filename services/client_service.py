@@ -2,7 +2,7 @@ from schemas.schemas import ClientCreate, ClientUpdate, OrderCreate
 from models.models  import Client
 from fastapi import HTTPException, status
 from typing import List
-from unit_of_work import UnitOfWork
+from database.unit_of_work import UnitOfWork
 
 
 class ClientService:

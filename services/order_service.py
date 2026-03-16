@@ -1,7 +1,7 @@
 from schemas.schemas import OrderCreate
-from models.models import Order, OrderStatus
+from models.models import Order
 from fastapi import HTTPException, status
-from unit_of_work import UnitOfWork
+from database.unit_of_work import UnitOfWork
 
 
 class OrderService:
@@ -100,7 +100,7 @@ class OrderService:
                 client_id=client_id
             )
             order = await uow.order.create_order(order)
-            print(f"{order.products} p1")
+            # print(f"{order.products} p1")
             order.products.append(product)
             return order
 

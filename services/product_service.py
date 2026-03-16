@@ -3,7 +3,7 @@ from repositories.product_repository import ProductRepository
 from models.models   import Product
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
-from unit_of_work import UnitOfWork
+from database.unit_of_work import UnitOfWork
 
 
 class ProductService:
@@ -24,5 +24,7 @@ class ProductService:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
             return products
         
+
+
 
 

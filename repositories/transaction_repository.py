@@ -1,6 +1,7 @@
 from models.models import Transaction
 from schemas.schemas import CreateTransaction
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func, and_
 
 
 
@@ -22,6 +23,17 @@ class TransactionRepository:
         self.session.add(transaction)
         await self.session.flush()
         return transaction
+    
+    async def get_transaction(self, transaction_id: int) -> Transaction:
+        stmt = await self.session.execute(
+            select(Transaction)
+            .where(Transaction.id == transaction_id)
+        )
+        return stmt.scalars().all()
+    
+    
+
+    
 
     
 
